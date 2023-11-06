@@ -45,7 +45,7 @@ public class DentistaTableController implements Initializable {
 
     public void onFiltrar(KeyEvent keyEvent) {
         String filtro=tfPesquisa.getText().toUpperCase();
-        preencherTabela("upper(pac_nome) like '%"+filtro+"%'");
+        preencherTabela("upper(den_nome) like '%"+filtro+"%'");
     }
 
     public void onNovoDentista(ActionEvent actionEvent) {

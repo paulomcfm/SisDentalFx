@@ -3,7 +3,6 @@ package br.fipp.sisdentalfx;
 import br.fipp.sisdentalfx.db.dals.ProcedimentoDAL;
 import br.fipp.sisdentalfx.db.entidades.Procedimento;
 import br.fipp.sisdentalfx.db.util.DB;
-import br.fipp.sisdentalfx.util.MaskFieldUtil;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

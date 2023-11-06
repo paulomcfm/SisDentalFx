@@ -42,7 +42,7 @@ public class ProcedimentoTableController implements Initializable {
 
     public void onFiltrar(KeyEvent keyEvent) {
         String filtro=tfPesquisa.getText().toUpperCase();
-        preencherTabela("upper(pac_nome) like '%"+filtro+"%'");
+        preencherTabela("upper(pro_desc) like '%"+filtro+"%'");
     }
 
     public void onNovoProcedimento(ActionEvent actionEvent) {

@@ -40,7 +40,7 @@ public class MaterialTableController implements Initializable {
 
     public void onFiltrar(KeyEvent keyEvent) {
         String filtro=tfPesquisa.getText().toUpperCase();
-        preencherTabela("upper(pac_nome) like '%"+filtro+"%'");
+        preencherTabela("upper(mat_desc) like '%"+filtro+"%'");
     }
 
     public void onNovoMaterial(ActionEvent actionEvent) {
