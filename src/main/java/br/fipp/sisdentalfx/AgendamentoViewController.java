@@ -3,18 +3,23 @@ package br.fipp.sisdentalfx;
 import br.fipp.sisdentalfx.db.dals.ConsultaDAL;
 import br.fipp.sisdentalfx.db.dals.PessoaDAL;
 import br.fipp.sisdentalfx.db.entidades.*;
+import br.fipp.sisdentalfx.db.util.PesquisaPaciente;
 import br.fipp.sisdentalfx.util.UIControl;
 import javafx.collections.FXCollections;
 import javafx.css.Style;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.BoxBlur;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -72,26 +77,43 @@ public class AgendamentoViewController implements Initializable {
         colPaciente.setCellValueFactory(new PropertyValueFactory<>("paciente"));
         List<Consulta> consultas = new ConsultaDAL().get(cbDentista.getSelectionModel().getSelectedItem(),dpDiaConsulta.getValue());
         List<Horario> horarios = new ArrayList<>();
-        for(int i=8;i<18;i++){
-            if(){//hora ta na lista de consultas, pega, se nao
-
-            }else{
-                horarios.add(new Horario());
-            }
-
+        for(int hora=8;hora<18;hora++){
+            horarios.add(new Horario(hora, new Paciente()));
+        }
+        for(Consulta con : consultas){
+            horarios.set(con.getHorario()-8,new Horario(con.getHorario(),con.getPaciente()));
         }
         tableView.setItems(FXCollections.observableArrayList(horarios));
     }
 
     public void onTrocouData(ActionEvent actionEvent) {
+        preencherHorarios();
     }
 
     public void onTrocouDentista(ActionEvent actionEvent) {
+        preencherHorarios();
     }
 
     public void onAgendar(ActionEvent actionEvent) {
+        PesquisaPaciente pesquisa = new PesquisaPaciente();
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setScene(new Scene(pesquisa));
+        stage.showAndWait();
+        Paciente paciente = pesquisa.getPaciente();
+        if(paciente!=null){
+            int hora = tableView.getSelectionModel().getSelectedItem().getHora();
+            new ConsultaDAL().gravar(new Consulta(dpDiaConsulta.getValue(),hora,cbDentista.getValue(),paciente,""));
+            //fazer validação das coisas
+            preencherHorarios();
+        }
     }
 
     public void onCancelarAgendamento(ActionEvent actionEvent) {
+        Paciente paciente = (Paciente) new PessoaDAL().get(1,new Paciente());
+        int hora = tableView.getSelectionModel().getSelectedItem().getHora();
+        new ConsultaDAL().apagar(new Consulta(dpDiaConsulta.getValue(),hora,cbDentista.getValue(),paciente,""));
+        //fazer validação das coisas
+        preencherHorarios();
     }
 }
