@@ -31,11 +31,21 @@ public class Testes {
             //List<Pessoa> lista = dal.get("",new Paciente());
             //for (Pessoa p : lista)
              //   System.out.println(p.getNome());
-            new ProcedimentoDAL().gravar(new Procedimento("teste",10,10.3));
-            new ConsultaDAL().gravar(new Consulta(1,LocalDate.now(),9,
-                    new Dentista(1,"",0,"",""),
-                    (Paciente) new PessoaDAL().get(1,new Paciente()),"",false));
-
+            //new ProcedimentoDAL().gravar(new Procedimento("teste",10,10.3));
+            //new ConsultaDAL().gravar(new Consulta(1,LocalDate.now(),9,
+              //      new Dentista(1,"",0,"",""),
+                //    (Paciente) new PessoaDAL().get(1,new Paciente()),"",false));/
+            Dentista dentista = (Dentista) new PessoaDAL().get(1, new Dentista());
+            List<Consulta> consulta = new ConsultaDAL().get(dentista, LocalDate.now());
+            System.out.println(consulta.get(0).getPaciente().getNome());
+            List <Consulta.ItemProc> procedimentos = consulta.get(0).getProcedimentos(); //DEU ERRADO
+            //List <Consulta.ItemMat> materiais = consulta.get(0).getMateriais();
+            for(Consulta.ItemProc item : procedimentos){
+                System.out.println(item.quant()+" "+item.procedimento().getDescricao());
+            }
+            //for(Consulta.ItemMat item : materiais){
+              //  System.out.println(item.quant()+" "+item.material().getDescricao());
+            //}
         }
         else
             System.out.println(DB.getCon().getMensagemErro());
