@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class PacienteTableController implements Initializable {
+    public static Pessoa pessoa=null;
     public TextField tfPesquisa;
     public Button btNovo;
     public TableView <Pessoa> tabela;
@@ -54,6 +55,13 @@ public class PacienteTableController implements Initializable {
     }
 
     public void onAlterar(ActionEvent actionEvent) {
+        if(tabela.getSelectionModel().getSelectedItem()!=null)
+        {
+            pessoa=tabela.getSelectionModel().getSelectedItem();
+            UIControl.abreModal("paciente-view.fxml");
+            preencherTabela("");
+            pessoa=null;
+        }
     }
 
     public void onApagar(ActionEvent actionEvent) {

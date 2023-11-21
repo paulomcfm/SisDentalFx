@@ -1,6 +1,7 @@
 module br.fipp.sisdentalfx {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.web;
     requires java.sql;
     requires java.desktop;
     requires java.logging;

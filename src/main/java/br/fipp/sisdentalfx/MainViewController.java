@@ -2,13 +2,21 @@ package br.fipp.sisdentalfx;
 
 import br.fipp.sisdentalfx.util.UIControl;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class MainViewController {
+public class MainViewController implements Initializable {
+    public ImageView opADM;
+    public ImageView opSecretaria;
+    public ImageView opDentista;
+    public ImageView opConfig;
+
     public void onAdm(MouseEvent mouseEvent) throws IOException {
         UIControl.trocaPainel("adm-view.fxml");
         //Platform.runLater(()->{
@@ -41,4 +49,25 @@ public class MainViewController {
         ((ImageView)mouseEvent.getSource()).setEffect(null);
     }
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        if(UIControl.nivel==3){
+            opDentista.setDisable(false);
+            opDentista.setOpacity(1);
+        }
+        if(UIControl.nivel==2){
+            opSecretaria.setDisable(false);
+            opSecretaria.setOpacity(1);
+        }
+        if(UIControl.nivel==1){
+            opADM.setDisable(false);
+            opADM.setOpacity(1);
+            opSecretaria.setDisable(false);
+            opSecretaria.setOpacity(1);
+            opDentista.setDisable(false);
+            opDentista.setOpacity(1);
+            opConfig.setDisable(false);
+            opConfig.setOpacity(1);
+        }
+    }
 }

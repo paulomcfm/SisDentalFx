@@ -6,11 +6,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
+import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class UIControl {
+    public static String usuario=null;
+    public static int nivel=0;
     public static void trocaPainel(String fxml)
     {
         try {
@@ -41,6 +44,19 @@ public class UIControl {
         }
     }
 
+    public static void abreHelp(String uri) {
+        try {
+            WebView webView = new WebView();
+            webView.getEngine().load(uri);
+            Scene scene = new Scene(webView);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
 
 

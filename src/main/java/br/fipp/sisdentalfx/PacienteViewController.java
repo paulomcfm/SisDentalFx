@@ -95,7 +95,12 @@ public class PacienteViewController implements Initializable {
                 }
             }
         });
-
+        if(PacienteTableController.pessoa!=null){
+            Paciente paciente = (Paciente) PacienteTableController.pessoa;
+            tfID.setText(""+paciente.getId());
+            tfNome.setText(paciente.getNome());
+            tfCidade.setText(paciente.getCidade());
+        }
     }
 
     private void gravarPaciente(ActionEvent e) {
@@ -103,11 +108,22 @@ public class PacienteViewController implements Initializable {
         //validar antes
         paciente = new Paciente(tfNome.getText(),tfCPF.getText(),tfCEP.getText(),tfRua.getText(),tfNumero.getText(),tfBairro.getText(),tfCidade.getText(),tfUF.getText(),tfFone.getText(),tfEmail.getText(),taHisto.getText());
         // gravar um novo paciente
-        if(new PessoaDAL().gravar(paciente)==false)
-        {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Erro ao gravar o paciente "+ DB.getCon().getMensagemErro());
-            alert.showAndWait();
+        if(PacienteTableController.pessoa==null){
+            if(new PessoaDAL().gravar(paciente)==false)
+            {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Erro ao gravar o paciente "+ DB.getCon().getMensagemErro());
+                alert.showAndWait();
+            }
+        }
+        else{
+            paciente.setId(Integer.parseInt(tfID.getText()));
+            if(new PessoaDAL().alterar(paciente)==false)
+            {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Erro ao gravar o paciente "+ DB.getCon().getMensagemErro());
+                alert.showAndWait();
+            }
         }
         ((Control)e.getSource()).getScene().getWindow().hide();
     }
