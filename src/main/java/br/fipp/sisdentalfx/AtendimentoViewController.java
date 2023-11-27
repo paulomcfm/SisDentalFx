@@ -3,22 +3,14 @@ package br.fipp.sisdentalfx;
 import br.fipp.sisdentalfx.db.dals.ConsultaDAL;
 import br.fipp.sisdentalfx.db.dals.PessoaDAL;
 import br.fipp.sisdentalfx.db.entidades.*;
-import br.fipp.sisdentalfx.db.util.PesquisaPaciente;
 import br.fipp.sisdentalfx.util.UIControl;
 import javafx.collections.FXCollections;
-import javafx.css.Style;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.BoxBlur;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
+import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,23 +19,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class AgendamentoViewController implements Initializable {
+public class AtendimentoViewController implements Initializable {
     public DatePicker dpDiaConsulta;
-    public TableView<Horario> tableView;
+    public TableView<Horario> tvHorario;
     public TableColumn<Horario,Integer> colHora;
-    public TableColumn<Horario, Paciente> colPaciente;
-    public ComboBox<Dentista> cbDentista;
+    public TableColumn<Horario, Paciente>  colPaciente;
+    public TextArea taObservacoes;
+    public ComboBox<Material> cbMaterial;
+    public Spinner sQtdMaterial;
+    public TableView<Material> tvMaterial;
+    public TableColumn<Material, Material> colMaterial;
+    public TableColumn<Material, Integer> colQtdMat;
+    public ComboBox<Procedimento> cbProcedimento;
+    public Spinner sQtdProcedimento;
+    public TableView<Procedimento> tvProcedimento;
+    public TableColumn<Procedimento, Procedimento> colProcedimento;
+    public TableColumn<Procedimento, Integer> colQtdProc;
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void initialize(URL location, ResourceBundle resources) {
         dpDiaConsulta.setValue(LocalDate.now());
-        List<Pessoa> dentistas = new PessoaDAL().get("", new Dentista());
-        for(Pessoa dentista:dentistas){
-            cbDentista.getItems().add((Dentista)dentista);
-        }
-
+        preencherHorarios();
     }
-
     public void onPaciente(ActionEvent actionEvent) throws IOException {
         BoxBlur bb = new BoxBlur(15,15,10);
         dpDiaConsulta.getScene().getRoot().setEffect(bb); // aplicando efeito borrado no painel
@@ -71,11 +68,12 @@ public class AgendamentoViewController implements Initializable {
         UIControl.abreModal("procedimento-table-view.fxml");
         dpDiaConsulta.getScene().getRoot().setEffect(null);
     }
-
     public void preencherHorarios(){
+
         colHora.setCellValueFactory(new PropertyValueFactory<>("hora"));
         colPaciente.setCellValueFactory(new PropertyValueFactory<>("paciente"));
-        List<Consulta> consultas = new ConsultaDAL().get(cbDentista.getSelectionModel().getSelectedItem(),dpDiaConsulta.getValue());
+        Dentista dentista = (Dentista) new PessoaDAL().get("den_nome like %"+UIControl.usuario+"%",new Dentista());
+        List<Consulta> consultas = new ConsultaDAL().get(dentista,dpDiaConsulta.getValue());
         List<Horario> horarios = new ArrayList<>();
         for(int hora=8;hora<18;hora++){
             horarios.add(new Horario(hora, new Paciente()));
@@ -83,46 +81,35 @@ public class AgendamentoViewController implements Initializable {
         for(Consulta con : consultas){
             horarios.set(con.getHorario()-8,new Horario(con.getHorario(),con.getPaciente()));
         }
-        tableView.setItems(FXCollections.observableArrayList(horarios));
+        tvHorario.setItems(FXCollections.observableArrayList(horarios));
+    }
+    public void onSelecionarProcedimento(MouseEvent mouseEvent) {
+    }
+
+    public void onSelecionarMaterial(MouseEvent mouseEvent) {
+    }
+
+    public void onSelecionarDentista(MouseEvent mouseEvent) {
     }
 
     public void onTrocouData(ActionEvent actionEvent) {
         preencherHorarios();
     }
 
-    public void onTrocouDentista(ActionEvent actionEvent) {
-        preencherHorarios();
+    public void onMaisMat(ActionEvent actionEvent) {
     }
 
-    public void onAgendar(ActionEvent actionEvent) {
-        PesquisaPaciente pesquisa = new PesquisaPaciente();
-        Stage stage = new Stage();
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setScene(new Scene(pesquisa));
-        stage.showAndWait();
-        Paciente paciente = pesquisa.getPaciente();
-        if(paciente!=null){
-            int hora = tableView.getSelectionModel().getSelectedItem().getHora();
-            new ConsultaDAL().gravar(new Consulta(dpDiaConsulta.getValue(),hora,cbDentista.getValue(),paciente,""));
-            //fazer validação das coisas
-            preencherHorarios();
-        }
+    public void onMenosMat(ActionEvent actionEvent) {
     }
 
-    public void onCancelarAgendamento(ActionEvent actionEvent) {
-        Horario horarioSelecionado = tableView.getSelectionModel().getSelectedItem();
-        if (horarioSelecionado != null) {
-            int hora = horarioSelecionado.getHora();
-            Paciente pacienteSelecionado = horarioSelecionado.getPaciente();
-            List<Consulta> consultas = new ConsultaDAL().get(cbDentista.getValue(), dpDiaConsulta.getValue());
-            for (Consulta consulta : consultas) {
-                if (consulta.getPaciente().getId()==pacienteSelecionado.getId()) {
-                    int consultaId = consulta.getId();
-                    new ConsultaDAL().apagar(new Consulta(consultaId, dpDiaConsulta.getValue(), hora, cbDentista.getValue(), pacienteSelecionado, "", false));
-                    preencherHorarios();
+    public void onMaisProc(ActionEvent actionEvent) {
+    }
+    public void onMenosProc(ActionEvent actionEvent) {
+    }
 
-                }
-            }
-        }
+    public void onConfirmar(ActionEvent actionEvent) {
+    }
+
+    public void onCancelar(ActionEvent actionEvent) {
     }
 }

@@ -99,7 +99,15 @@ public class PacienteViewController implements Initializable {
             Paciente paciente = (Paciente) PacienteTableController.pessoa;
             tfID.setText(""+paciente.getId());
             tfNome.setText(paciente.getNome());
+            tfCEP.setText(paciente.getCep());
+            tfRua.setText(paciente.getRua());
+            tfNumero.setText(paciente.getNumero());
             tfCidade.setText(paciente.getCidade());
+            tfUF.setText(paciente.getUf());
+            tfBairro.setText(paciente.getBairro());
+            tfFone.setText(paciente.getFone());
+            tfEmail.setText(paciente.getEmail());
+            taHisto.setText(paciente.getHisto());
         }
     }
 
@@ -121,7 +129,7 @@ public class PacienteViewController implements Initializable {
             if(new PessoaDAL().alterar(paciente)==false)
             {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setContentText("Erro ao gravar o paciente "+ DB.getCon().getMensagemErro());
+                alert.setContentText("Erro ao alterar o paciente "+ DB.getCon().getMensagemErro());
                 alert.showAndWait();
             }
         }

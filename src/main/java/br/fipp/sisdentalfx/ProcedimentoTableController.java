@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class ProcedimentoTableController implements Initializable {
+    public static Procedimento procedimento=null;
     public TextField tfPesquisa;
     public Button btNovo;
     public TableView <Procedimento> tabela;
@@ -51,6 +52,13 @@ public class ProcedimentoTableController implements Initializable {
     }
 
     public void onAlterar(ActionEvent actionEvent) {
+        if(tabela.getSelectionModel().getSelectedItem()!=null)
+        {
+            procedimento=tabela.getSelectionModel().getSelectedItem();
+            UIControl.abreModal("procedimento-view.fxml");
+            preencherTabela("");
+            procedimento=null;
+        }
     }
 
     public void onApagar(ActionEvent actionEvent) {

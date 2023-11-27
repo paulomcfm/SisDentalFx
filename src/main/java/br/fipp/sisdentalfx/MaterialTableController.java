@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class MaterialTableController implements Initializable {
+    public static Material material=null;
     public TextField tfPesquisa;
     public Button btNovo;
     public TableView <Material> tabela;
@@ -49,6 +50,13 @@ public class MaterialTableController implements Initializable {
     }
 
     public void onAlterar(ActionEvent actionEvent) {
+        if(tabela.getSelectionModel().getSelectedItem()!=null)
+        {
+            material=tabela.getSelectionModel().getSelectedItem();
+            UIControl.abreModal("material-view.fxml");
+            preencherTabela("");
+            material=null;
+        }
     }
 
     public void onApagar(ActionEvent actionEvent) {

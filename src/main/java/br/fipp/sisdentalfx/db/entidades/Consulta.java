@@ -28,7 +28,6 @@ public class Consulta {
         procedimentos = new ArrayList<>();
         materiais = new ArrayList<>();
     }
-
     public Consulta(LocalDate data, int horario, Dentista dentista, Paciente paciente, String relato) {
         this(0,data,horario,dentista,paciente,relato,false);
     }

@@ -43,6 +43,15 @@ public class ConsultaDAL implements IDAL<Consulta>{
 
     @Override
     public boolean apagar(Consulta entidade) {
+        String sql = "DELETE FROM consulta WHERE con_id = " + entidade.getId();
+        if (DB.getCon().manipular(sql)) {
+
+            DB.getCon().manipular("DELETE FROM cons_mat WHERE con_id = " + entidade.getId());
+
+            DB.getCon().manipular("DELETE FROM cons_proc WHERE con_id = " + entidade.getId());
+
+            return true;
+        }
         return false;
     }
 

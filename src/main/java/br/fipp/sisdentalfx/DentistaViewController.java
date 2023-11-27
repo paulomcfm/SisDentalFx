@@ -2,6 +2,7 @@ package br.fipp.sisdentalfx;
 
 import br.fipp.sisdentalfx.db.dals.PessoaDAL;
 import br.fipp.sisdentalfx.db.entidades.Dentista;
+import br.fipp.sisdentalfx.db.entidades.Paciente;
 import br.fipp.sisdentalfx.db.util.DB;
 import br.fipp.sisdentalfx.util.MaskFieldUtil;
 import javafx.application.Platform;
@@ -39,20 +40,37 @@ public class DentistaViewController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Platform.runLater(()-> tfNome.requestFocus()); // executa ao finalizar o carregamento do formulário
         btCancelar.setOnAction(e->{((Control)e.getSource()).getScene().getWindow().hide();});
-        btConfirmar.setOnAction(e->gravarPaciente(e));
+        btConfirmar.setOnAction(e->gravarDentista(e));
         MaskFieldUtil.foneField(tfFone);
+        if(DentistaTableController.pessoa!=null){
+            Dentista dentista = (Dentista) DentistaTableController.pessoa;
+            tfID.setText(""+dentista.getId());
+            tfNome.setText(dentista.getNome());
+            tfCRO.setText(""+dentista.getCro());
+            tfFone.setText(dentista.getFone());
+            tfEmail.setText(dentista.getEmail());
+        }
      }
 
-    private void gravarPaciente(ActionEvent e) {
+    private void gravarDentista(ActionEvent e) {
         Dentista dentista;
         //validar antes
         dentista = new Dentista(tfNome.getText(),Integer.parseInt(tfCRO.getText()),tfFone.getText(),tfEmail.getText());
         // gravar um novo dentista
-        if(new PessoaDAL().gravar(dentista)==false)
-        {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Erro ao gravar o dentista "+ DB.getCon().getMensagemErro());
-            alert.showAndWait();
+        if(DentistaTableController.pessoa==null) {
+            if (new PessoaDAL().gravar(dentista) == false) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Erro ao gravar o dentista " + DB.getCon().getMensagemErro());
+                alert.showAndWait();
+            }
+        }
+        else {
+            dentista.setId(Integer.parseInt(tfID.getText()));
+            if (new PessoaDAL().alterar(dentista) == false) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Erro ao alterar o dentista " + DB.getCon().getMensagemErro());
+                alert.showAndWait();
+            }
         }
         ((Control)e.getSource()).getScene().getWindow().hide();
     }

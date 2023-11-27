@@ -34,6 +34,7 @@ public class MainViewController implements Initializable {
     }
 
     public void onDentista(MouseEvent mouseEvent) {
+        UIControl.trocaPainel("atendimento-view.fxml");
     }
 
     public void onConfig(MouseEvent mouseEvent) {
