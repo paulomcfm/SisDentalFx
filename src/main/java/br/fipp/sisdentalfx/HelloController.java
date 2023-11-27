@@ -16,6 +16,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -34,6 +35,10 @@ public class HelloController implements Initializable {
     public Button btClose;
     public Label lbAcesso;
     public Button btHelp;
+    public ImageView ivLogotipo;
+    public TextField tf_usu;
+
+    public TextField tf_senna;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -41,6 +46,8 @@ public class HelloController implements Initializable {
         btHome.setTooltip(new Tooltip("Ir para o início"));
         btClose.setTooltip(new Tooltip("Fechar o sistema"));
         btHome.setDisable(true);
+        Image img = new Image("file:src\\main\\resources\\br\\fipp\\sisdentalfx\\logotipo.png");
+        ivLogotipo.setImage(img);
 
         lbAcesso.setOnMouseClicked(e->{
             try {
@@ -54,7 +61,7 @@ public class HelloController implements Initializable {
     }
 
     public void onHome(ActionEvent actionEvent) throws IOException {
-        String usu = "adm1",senha="1234";
+        String usu = tf_usu.getText() ,senha=tf_senna.getText();
         List <Pessoa> usuarios = new PessoaDAL().get("uso_nome like '"+usu+"'", new Usuario());
         Usuario usuario;
         boolean logado=false;
@@ -71,7 +78,11 @@ public class HelloController implements Initializable {
             fxmlLoader.load();
             staticpainel.setCenter(fxmlLoader.getRoot());
         }else{
-            //informar login errado
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Login não efetuado.");
+            alert.setHeaderText("Erro ao fazer login.");
+            alert.setContentText("Usuário ou senha incorretos.");
+            alert.showAndWait();
         }
 
     }
