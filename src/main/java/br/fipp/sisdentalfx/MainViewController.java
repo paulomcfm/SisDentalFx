@@ -28,9 +28,6 @@ public class MainViewController implements Initializable {
 
     public void onSecretaria(MouseEvent mouseEvent) throws IOException {
         UIControl.trocaPainel("agendamento-view.fxml");
-//        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("agendamento-view.fxml"));
-//        fxmlLoader.load();
-//        HelloController.staticpainel.setCenter(fxmlLoader.getRoot());
     }
 
     public void onDentista(MouseEvent mouseEvent) {

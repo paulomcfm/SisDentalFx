@@ -38,9 +38,10 @@
                     <children>
                         <Label text="Data da Consulta" textFill="#d7ee0a" />
                         <DatePicker fx:id="dpDiaConsulta" onAction="#onTrocouData" prefHeight="25.0" prefWidth="131.0" showWeekNumbers="true" style="-fx-font-size: 14;" />
+                        <ComboBox fx:id="cbDentista" onAction="#onTrocouDentista" prefHeight="25.0" prefWidth="132.0" style="-fx-font-size: 14;" />
                       <VBox>
                           <children>
-                              <TableView fx:id="tvHorario" onMouseClicked="#onSelecionarDentista" prefHeight="200.0" prefWidth="200.0" style="-fx-border-radius: 10; -fx-background-radius: 10; -fx-background-color: white;" VBox.vgrow="ALWAYS">
+                              <TableView fx:id="tvHorario" onMouseClicked="#onSelecionarAtendimento" prefHeight="200.0" prefWidth="200.0" style="-fx-border-radius: 10; -fx-background-radius: 10; -fx-background-color: white;" VBox.vgrow="ALWAYS">
                                   <columns>
                                       <TableColumn fx:id="colHora" maxWidth="75.0" prefWidth="75.0" text="HORA" />
                                       <TableColumn fx:id="colPaciente" prefWidth="75.0" text="PACIENTE" />
@@ -66,13 +67,13 @@
                      <children>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <ComboBox fx:id="cbMaterial" prefWidth="150.0" />
+                              <ComboBox fx:id="cbMaterial" onAction="#onTrocouMaterial" prefWidth="150.0" />
                               <Spinner fx:id="sQtdMaterial" prefHeight="25.0" prefWidth="61.0" />
                               <Button mnemonicParsing="false" onAction="#onMaisMat" text="+" />
                               <Button layoutX="86.0" layoutY="10.0" mnemonicParsing="false" onAction="#onMenosMat" text="-" />
                            </children>
                         </HBox>
-                        <TableView fx:id="tvMaterial" onMouseClicked="#onSelecionarMaterial" prefHeight="200.0" prefWidth="200.0">
+                        <TableView fx:id="tvMaterial" prefHeight="200.0" prefWidth="200.0">
                           <columns>
                             <TableColumn fx:id="colMaterial" prefWidth="357.0" text="Material" />
                             <TableColumn fx:id="colQtdMat" prefWidth="143.0" text="Quant" />
@@ -84,13 +85,13 @@
                      <children>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <ComboBox fx:id="cbProcedimento" prefWidth="150.0" />
+                              <ComboBox fx:id="cbProcedimento" onAction="#onTrocouProcedimento" prefWidth="150.0" />
                               <Spinner fx:id="sQtdProcedimento" prefHeight="25.0" prefWidth="67.0" />
                               <Button mnemonicParsing="false" onAction="#onMaisProc" text="+" />
                               <Button layoutX="86.0" layoutY="10.0" mnemonicParsing="false" onAction="#onMenosProc" text="-" />
                            </children>
                         </HBox>
-                        <TableView fx:id="tvProcedimento" onMouseClicked="#onSelecionarProcedimento" prefHeight="200.0" prefWidth="200.0">
+                        <TableView fx:id="tvProcedimento" prefHeight="200.0" prefWidth="200.0">
                            <columns>
                               <TableColumn fx:id="colProcedimento" prefWidth="364.0" text="Procedimento" />
                               <TableColumn fx:id="colQtdProc" prefWidth="136.0" text="Quant" />

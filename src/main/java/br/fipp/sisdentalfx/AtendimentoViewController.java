@@ -1,9 +1,12 @@
 package br.fipp.sisdentalfx;
 
 import br.fipp.sisdentalfx.db.dals.ConsultaDAL;
+import br.fipp.sisdentalfx.db.dals.MaterialDAL;
 import br.fipp.sisdentalfx.db.dals.PessoaDAL;
+import br.fipp.sisdentalfx.db.dals.ProcedimentoDAL;
 import br.fipp.sisdentalfx.db.entidades.*;
 import br.fipp.sisdentalfx.util.UIControl;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -26,20 +29,34 @@ public class AtendimentoViewController implements Initializable {
     public TableColumn<Horario, Paciente>  colPaciente;
     public TextArea taObservacoes;
     public ComboBox<Material> cbMaterial;
-    public Spinner sQtdMaterial;
-    public TableView<Material> tvMaterial;
-    public TableColumn<Material, Material> colMaterial;
-    public TableColumn<Material, Integer> colQtdMat;
+    public Spinner<Integer> sQtdMaterial;
+    public TableView<Mat> tvMaterial;
+    public TableColumn<Mat, Mat> colMaterial;
+    public TableColumn<Mat, Integer> colQtdMat;
     public ComboBox<Procedimento> cbProcedimento;
-    public Spinner sQtdProcedimento;
-    public TableView<Procedimento> tvProcedimento;
-    public TableColumn<Procedimento, Procedimento> colProcedimento;
-    public TableColumn<Procedimento, Integer> colQtdProc;
+    public Spinner<Integer>  sQtdProcedimento;
+    public TableView<Proc> tvProcedimento;
+    public TableColumn<Proc, Proc> colProcedimento;
+    public TableColumn<Proc, Integer> colQtdProc;
+    public ComboBox<Dentista> cbDentista;
+
+    private List<Mat> materiais = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         dpDiaConsulta.setValue(LocalDate.now());
-        preencherHorarios();
+        List<Pessoa> dentistas = new PessoaDAL().get("", new Dentista());
+        for(Pessoa dentista:dentistas){
+            cbDentista.getItems().add((Dentista)dentista);
+        }
+        List<Material> materiais = new MaterialDAL().get("");
+        for(Material material:materiais){
+            cbMaterial.getItems().add(material);
+        }
+        List<Procedimento> procedimentos = new ProcedimentoDAL().get("");
+        for(Procedimento procedimento:procedimentos){
+            cbProcedimento.getItems().add(procedimento);
+        }
     }
     public void onPaciente(ActionEvent actionEvent) throws IOException {
         BoxBlur bb = new BoxBlur(15,15,10);
@@ -69,11 +86,9 @@ public class AtendimentoViewController implements Initializable {
         dpDiaConsulta.getScene().getRoot().setEffect(null);
     }
     public void preencherHorarios(){
-
         colHora.setCellValueFactory(new PropertyValueFactory<>("hora"));
         colPaciente.setCellValueFactory(new PropertyValueFactory<>("paciente"));
-        Dentista dentista = (Dentista) new PessoaDAL().get("den_nome like %"+UIControl.usuario+"%",new Dentista());
-        List<Consulta> consultas = new ConsultaDAL().get(dentista,dpDiaConsulta.getValue());
+        List<Consulta> consultas = new ConsultaDAL().get(cbDentista.getSelectionModel().getSelectedItem(),dpDiaConsulta.getValue());
         List<Horario> horarios = new ArrayList<>();
         for(int hora=8;hora<18;hora++){
             horarios.add(new Horario(hora, new Paciente()));
@@ -83,26 +98,69 @@ public class AtendimentoViewController implements Initializable {
         }
         tvHorario.setItems(FXCollections.observableArrayList(horarios));
     }
-    public void onSelecionarProcedimento(MouseEvent mouseEvent) {
-    }
-
-    public void onSelecionarMaterial(MouseEvent mouseEvent) {
-    }
-
-    public void onSelecionarDentista(MouseEvent mouseEvent) {
-    }
-
     public void onTrocouData(ActionEvent actionEvent) {
         preencherHorarios();
     }
+    public void onTrocouDentista(ActionEvent actionEvent) {
+        preencherHorarios();
+    }
 
+    public void onSelecionarAtendimento(MouseEvent mouseEvent) {
+        tvHorario.getSelectionModel().getSelectedItem().getPaciente();
+    }
+    public class Mat{
+        private String descricao;
+        private int qtd;
+
+        public Mat(String descricao, int qtd) {
+            this.descricao=descricao;
+            this.qtd=qtd;
+        }
+        public String getDescricao() {
+            return descricao;
+        }
+
+        public int getQtd() {
+            return qtd;
+        }
+
+        public void setDescricao(String descricao) {
+            this.descricao = descricao;
+        }
+
+        public void setQtd(int qtd) {
+            this.qtd = qtd;
+        }
+    }
     public void onMaisMat(ActionEvent actionEvent) {
+        colMaterial.setCellValueFactory(new PropertyValueFactory<>("descricao"));
+        colQtdMat.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getQtd()).asObject());
+        Material material = cbMaterial.getValue();
+        Mat mat = new Mat(material.getDescricao(), sQtdMaterial.getValue());
+        materiais.add(mat);
+        tvMaterial.setItems(FXCollections.observableArrayList(materiais));
     }
 
     public void onMenosMat(ActionEvent actionEvent) {
     }
+    public class Proc{
+        private String descricao;
+        private int qtd;
 
+        public Proc(String descricao, int qtd) {
+            this.descricao=descricao;
+            this.qtd=qtd;
+        }
+        public String getDescricao() {
+            return descricao;
+        }
+
+        public int getQtd() {
+            return qtd;
+        }
+    }
     public void onMaisProc(ActionEvent actionEvent) {
+
     }
     public void onMenosProc(ActionEvent actionEvent) {
     }
@@ -112,4 +170,12 @@ public class AtendimentoViewController implements Initializable {
 
     public void onCancelar(ActionEvent actionEvent) {
     }
+    public void onTrocouMaterial(ActionEvent actionEvent) {
+        sQtdMaterial.setValueFactory( new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100, 0));
+    }
+    public void onTrocouProcedimento(ActionEvent actionEvent) {
+        sQtdProcedimento.setValueFactory( new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100, 0));
+    }
+
+
 }
